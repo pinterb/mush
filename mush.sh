@@ -89,7 +89,7 @@ mush () {
   ## source our extra file
   if [ ! -z "$extra" ]; then
     if [ -f "$extra" ]; then
-      echo "sourcing '$extra'" | {
+      echo "sourcing '$extra'"
       source "$extra"
     fi
   fi
