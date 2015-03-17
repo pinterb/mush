@@ -5,7 +5,7 @@ mush_version () {
 }
 
 mush_usage () {
-  echo "usage: mush [-ehV] [-f <file>] [-o <file>] [-x <file>]"
+  echo "usage: mush [-ehV] [-f <file>] [-o <file>]"
 
   if [ "$1" = "1" ]; then
     echo
@@ -18,7 +18,6 @@ mush_usage () {
     echo "options:"
     echo "  -f, --file <file>       file to parse"
     echo "  -o, --out <file>        output file"
-    echo "  -x, --extra <file>      extra file that's sourced to expose environment variables"
     echo "  -e, --escape            escapes html html entities"
     echo "  -h, --help              display this message"
     echo "  -V, --version           output version"
@@ -35,8 +34,9 @@ mush () {
   local RIGHT_DELIM="}}"
   local INDENT_LEVEL="  "
   local ESCAPE=0
-  local ENV="`env`"
   local out=">&$STDOUT"
+  local extra="$HOME/.extra"
+  
 
   ## parse opts
   while true; do
@@ -58,10 +58,6 @@ mush () {
         ;;
       -o|--out)
         out="> $2";
-        shift 2;
-        ;;
-      -x|--extra)
-        extra="> $2";
         shift 2;
         ;;
       -e|--escape)
@@ -87,12 +83,10 @@ mush () {
   done
  
   ## source our extra file
-  if [ ! -z "$extra" ]; then
-    if [ -f "$extra" ]; then
-      echo "sourcing '$extra'"
-      source "$extra"
-    fi
+  if [ ! -z "$extra" ] && [ -f "$extra" ]; then
+    source $extra
   fi
+  local ENV="`env`"
 
   ## read each line
   while IFS= read line; do
