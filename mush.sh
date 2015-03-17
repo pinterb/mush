@@ -35,8 +35,7 @@ mush () {
   local INDENT_LEVEL="  "
   local ESCAPE=0
   local out=">&$STDOUT"
-  local extra="$HOME/.extra"
-  
+  local extra="${MUSH_EXTRA:-$HOME/.extra}"
 
   ## parse opts
   while true; do
